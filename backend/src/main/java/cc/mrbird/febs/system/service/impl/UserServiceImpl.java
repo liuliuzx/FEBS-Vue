@@ -1,8 +1,9 @@
 package cc.mrbird.febs.system.service.impl;
 
+import cc.mrbird.febs.common.domain.FebsConstant;
 import cc.mrbird.febs.common.domain.QueryRequest;
 import cc.mrbird.febs.common.service.CacheService;
-import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.system.dao.UserMapper;
 import cc.mrbird.febs.system.dao.UserRoleMapper;
@@ -12,8 +13,9 @@ import cc.mrbird.febs.system.manager.UserManager;
 import cc.mrbird.febs.system.service.UserConfigService;
 import cc.mrbird.febs.system.service.UserRoleService;
 import cc.mrbird.febs.system.service.UserService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -45,18 +47,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User findByName(String username) {
-        User param = new User();
-        param.setUsername(username);
-        List<User> list = baseMapper.findUserDetail(param);
-        return list.isEmpty() ? null : list.get(0);
+        return baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
     }
 
 
     @Override
-    public IPage findUserDetail(User user, QueryRequest request) {
+    public IPage<User> findUserDetail(User user, QueryRequest request) {
         try {
-            Page page = new Page();
-            FebsUtil.handleSort(request, page, null);
+            Page<User> page = new Page<>();
+            SortUtil.handlePageSort(request, page, "userId", FebsConstant.ORDER_ASC, false);
             return this.baseMapper.findUserDetail(page, user);
         } catch (Exception e) {
             log.error("查询用户异常", e);
@@ -70,7 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = new User();
         user.setLastLoginTime(new Date());
 
-        this.baseMapper.update(user, new QueryWrapper<User>().lambda().eq(User::getUsername, username));
+        this.baseMapper.update(user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
 
         // 重新将用户信息加载到 redis中
         cacheService.saveUser(username);
@@ -86,7 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         save(user);
 
         // 保存用户角色
-        String[] roles = user.getRoleId().split(",");
+        String[] roles = user.getRoleId().split(StringPool.COMMA);
         setUserRoles(user, roles);
 
         // 创建用户默认的个性化配置
@@ -104,9 +103,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUpdateTime(new Date());
         updateById(user);
 
-        userRoleMapper.delete(new QueryWrapper<UserRole>().lambda().eq(UserRole::getUserId, user.getId()));
+        userRoleMapper.delete(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, user.getId()));
 
-        String[] roles = user.getRoleId().split(",");
+        String[] roles = user.getRoleId().split(StringPool.COMMA);
         setUserRoles(user, roles);
 
         // 重新将用户信息，用户角色信息，用户权限信息 加载到 redis中
@@ -145,7 +144,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = new User();
         user.setAvatar(avatar);
 
-        this.baseMapper.update(user, new QueryWrapper<User>().lambda().eq(User::getUsername, username));
+        this.baseMapper.update(user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
         // 重新缓存用户信息
         cacheService.saveUser(username);
     }
@@ -156,7 +155,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = new User();
         user.setPassword(MD5Util.encrypt(username, password));
 
-        this.baseMapper.update(user, new QueryWrapper<User>().lambda().eq(User::getUsername, username));
+        this.baseMapper.update(user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
         // 重新缓存用户信息
         cacheService.saveUser(username);
     }
@@ -189,12 +188,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional
     public void resetPassword(String[] usernames) throws Exception {
-        for (String username: usernames) {
+        for (String username : usernames) {
 
             User user = new User();
             user.setPassword(MD5Util.encrypt(username, User.DEFAULT_PASSWORD));
 
-            this.baseMapper.update(user, new QueryWrapper<User>().lambda().eq(User::getUsername, username));
+            this.baseMapper.update(user, new LambdaQueryWrapper<User>().eq(User::getUsername, username));
             // 重新将用户信息加载到 redis中
             cacheService.saveUser(username);
         }

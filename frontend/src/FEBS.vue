@@ -143,10 +143,18 @@ export default {
     padding-bottom: 3rem !important;
   }
   .page-tabs .ant-tabs-close-x {
+<<<<<<< .merge_file_001GkY
     margin-left: 0.3rem! important;
     &:hover {
       color: #f95476 !important;
     }
+=======
+    color:#fff !important;
+    margin-left: 0.3rem! important;
+  }
+  .page-tabs:hover .ant-tabs-close-x {
+    color: #f95476 !important;
+>>>>>>> .merge_file_tOP36o
   }
   .drawer-bootom-button {
     position: absolute;
