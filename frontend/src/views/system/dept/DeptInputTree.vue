@@ -22,7 +22,7 @@ export default {
     }
   },
   mounted () {
-    this.$get('dept').then((r) => {
+    this.$get('admin/dept').then((r) => {
       this.deptTreeData = r.data.rows.children
     })
   },

@@ -214,4 +214,7 @@ const request = {
   }
 }
 
-export default request
+export {
+  request,
+  FEBS_REQUEST as axios
+}

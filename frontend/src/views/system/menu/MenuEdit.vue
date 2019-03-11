@@ -203,7 +203,7 @@ export default {
           }
           // 0 表示菜单 1 表示按钮
           menu.type = '0'
-          this.$put('menu', {
+          this.$put('admin/menu', {
             ...menu
           }).then(() => {
             this.reset()
@@ -218,7 +218,7 @@ export default {
   watch: {
     menuEditVisiable () {
       if (this.menuEditVisiable) {
-        this.$get('menu', {
+        this.$get('admin/menu', {
           type: '0'
         }).then((r) => {
           this.menuTreeData = r.data.rows.children

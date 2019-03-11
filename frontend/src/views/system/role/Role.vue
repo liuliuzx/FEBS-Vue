@@ -31,9 +31,9 @@
     </div>
     <div>
       <div class="operator">
-        <a-button v-hasPermission="'role:add'" ghost type="primary" @click="add">新增</a-button>
-        <a-button v-hasPermission="'role:delete'" @click="batchDelete">删除</a-button>
-        <a-dropdown v-hasPermission="'role:export'">
+        <a-button v-hasPermission="'admin:role:add'" ghost type="primary" @click="add">新增</a-button>
+        <a-button v-hasPermission="'admin:role:delete'" @click="batchDelete">删除</a-button>
+        <a-dropdown v-hasPermission="'admin:role:export'">
           <a-menu slot="overlay">
             <a-menu-item key="export-data" @click="exprotExccel">导出Excel</a-menu-item>
           </a-menu>
@@ -60,7 +60,7 @@
           </a-popover>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon v-hasPermission="'role:update'" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修改角色"></a-icon>
+          <a-icon v-hasPermission="'admin:role:update'" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修改角色"></a-icon>
           &nbsp;
           <a-icon type="eye" theme="twoTone" twoToneColor="#42b983" @click="view(record)" title="查看"></a-icon>
         </template>
@@ -149,9 +149,9 @@ export default {
         sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order
       }, {
         title: '修改时间',
-        dataIndex: 'modifyTime',
+        dataIndex: 'updateTime',
         sorter: true,
-        sortOrder: sortedInfo.columnKey === 'modifyTime' && sortedInfo.order
+        sortOrder: sortedInfo.columnKey === 'updateTime' && sortedInfo.order
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -218,7 +218,7 @@ export default {
           for (let key of that.selectedRowKeys) {
             roleIds.push(that.dataSource[key].roleId)
           }
-          that.$delete('role/' + roleIds.join(',')).then(() => {
+          that.$delete('admin/role/' + roleIds.join(',')).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -237,7 +237,7 @@ export default {
         sortField = sortedInfo.field
         sortOrder = sortedInfo.order
       }
-      this.$export('role/excel', {
+      this.$export('admin/role/excel', {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams
@@ -297,7 +297,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize
         params.pageNum = this.pagination.defaultCurrent
       }
-      this.$get('role', {
+      this.$get('admin/role', {
         ...params
       }).then((r) => {
         let data = r.data

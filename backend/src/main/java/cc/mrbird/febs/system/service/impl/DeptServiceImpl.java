@@ -71,7 +71,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     @Transactional
     public void updateDept(Dept dept) {
-        dept.setModifyTime(new Date());
+        dept.setUpdateTime(new Date());
         this.baseMapper.updateById(dept);
     }
 
@@ -89,7 +89,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
             tree.setParentId(dept.getParentId().toString());
             tree.setText(dept.getDeptName());
             tree.setCreateTime(dept.getCreateTime());
-            tree.setModifyTime(dept.getModifyTime());
+            tree.setUpdateTime(dept.getUpdateTime());
             tree.setOrder(dept.getOrderNum());
             tree.setTitle(tree.getText());
             tree.setValue(tree.getId());

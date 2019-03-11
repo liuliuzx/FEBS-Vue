@@ -1,20 +1,30 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\Administrator\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js install
+  /usr/local/Cellar/node/10.11.0/bin/node /usr/local/lib/node_modules/yarn/bin/yarn.js add @/utils
 
 PATH: 
-  C:\Program Files (x86)\Common Files\Oracle\Java\javapath;f:\app\Administrator\product\11.2.0\client_1\bin;f:\app\Administrator\product\11.2.0\dbhome_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;"%JAVA_HOME%\bin;%JAVA_HOME%\jre\bin";%M2_HOME%\bin;C:\Program Files\TortoiseSVN\bin;C:\Program Files\PuTTY\;C:\ProgramData\chocolatey\bin;C:\Program Files\Git\cmd;%SONAR_RUNNER_HOME%\bin;%CURL_HOME%;C:\Program Files (x86)\Yarn\bin\;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\nodejs\;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;"C:\Program Files\Java\jdk1.8.0_171\bin;C:\Program Files\Java\jdk1.8.0_171\jre\bin";D:\Program Files\maven-3.5.3\bin;C:\Program Files\cmder;D:\Program Files\sonar\sonar-scanner-3.2.0\bin;C:\curl-7.33.0-win64-ssl-sspi;C:\Users\Administrator\AppData\Local\Yarn\bin;C:\Users\Administrator\AppData\Roaming\npm
+  /usr/local/opt/php@5.6/sbin:/usr/local/opt/php@5.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/opt/openssl/bin:/usr/local/Cellar/rabbitmq/3.7.8/sbin:/Users/lzx/work/IT/java/maven/apache-maven-3.5.4/bin:/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home/bin:/Users/lzx/work/IT/database/mongodb-osx-x86_64-4.0.3/bin:
 
 Yarn version: 
   1.12.3
 
 Node version: 
-  10.15.0
+  10.11.0
 
 Platform: 
-  win32 x64
+  darwin x64
 
 Trace: 
-  Error: EBUSY: resource busy or locked, copyfile 'C:\Users\Administrator\AppData\Local\Yarn\Cache\v4\npm-script-ext-html-webpack-plugin-2.0.1-90ac3d77f1892ad9054c3752f0e4673607f6d9a3\node_modules\script-ext-html-webpack-plugin\lib\config.js' -> 'F:\Apart\febs_apart\febs_front\node_modules\script-ext-html-webpack-plugin\lib\config.js'
+  Error: https://registry.npm.taobao.org/@%2futils: Request "https://registry.npm.taobao.org/@%2futils" returned a 405
+      at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:65903:18)
+      at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:129018:22)
+      at Request.emit (events.js:182:13)
+      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:129990:10)
+      at Request.emit (events.js:182:13)
+      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:129912:12)
+      at Object.onceWrapper (events.js:273:13)
+      at IncomingMessage.emit (events.js:187:15)
+      at endReadableNT (_stream_readable.js:1092:12)
+      at process._tickCallback (internal/process/next_tick.js:63:19)
 
 npm manifest: 
   {
@@ -25,7 +35,6 @@ npm manifest:
     "private": true,
     "scripts": {
       "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-      "analyz": "set NODE_ENV=production npm_config_report=true && npm run build",
       "start": "npm run dev",
       "build": "node build/build.js"
     },
@@ -58,6 +67,7 @@ npm manifest:
       "babel-register": "^6.22.0",
       "chalk": "^2.0.1",
       "chromedriver": "^2.27.2",
+      "compression-webpack-plugin": "^1.1.12",
       "copy-webpack-plugin": "^4.0.1",
       "cross-spawn": "^5.0.1",
       "css-loader": "^0.28.0",
@@ -74,7 +84,6 @@ npm manifest:
       "file-loader": "^1.1.4",
       "friendly-errors-webpack-plugin": "^1.6.1",
       "html-webpack-plugin": "^2.30.1",
-      "script-ext-html-webpack-plugin": "2.0.1",
       "jest": "^22.0.4",
       "jest-serializer-vue": "^0.3.0",
       "less": "^3.7.1",
@@ -1563,9 +1572,10 @@ Lockfile:
     version "3.0.0"
     resolved "http://registry.npm.taobao.org/bytes/download/bytes-3.0.0.tgz#d32815404d689699f85a4ea4fa8755dd13a96048"
   
-  cacache@^10.0.4:
+  cacache@^10.0.1, cacache@^10.0.4:
     version "10.0.4"
     resolved "http://registry.npm.taobao.org/cacache/download/cacache-10.0.4.tgz#6452367999eff9d4188aefd9a14e9d7c6a263460"
+    integrity sha1-ZFI2eZnv+dQYiu/ZoU6dfGomNGA=
     dependencies:
       bluebird "^3.5.1"
       chownr "^1.0.1"
@@ -1944,6 +1954,17 @@ Lockfile:
     resolved "http://registry.npm.taobao.org/compressible/download/compressible-2.0.14.tgz#326c5f507fbb055f54116782b969a81b67a29da7"
     dependencies:
       mime-db ">= 1.34.0 < 2"
+  
+  compression-webpack-plugin@^1.1.12:
+    version "1.1.12"
+    resolved "http://registry.npm.taobao.org/compression-webpack-plugin/download/compression-webpack-plugin-1.1.12.tgz#becd2aec620ace96bb3fe9a42a55cf48acc8b4d4"
+    integrity sha1-vs0q7GIKzpa7P+mkKlXPSKzItNQ=
+    dependencies:
+      cacache "^10.0.1"
+      find-cache-dir "^1.0.0"
+      neo-async "^2.5.0"
+      serialize-javascript "^1.4.0"
+      webpack-sources "^1.0.1"
   
   compression@^1.5.2:
     version "1.7.3"

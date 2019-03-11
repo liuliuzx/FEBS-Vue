@@ -11,7 +11,7 @@
       <p><a-icon type="crown" />&nbsp;&nbsp;角色名称：{{roleInfoData.roleName}}</p>
       <p :title="roleInfoData.remark"><a-icon type="book" />&nbsp;&nbsp;角色描述：{{roleInfoData.remark}}</p>
       <p><a-icon type="clock-circle" />&nbsp;&nbsp;创建时间：{{roleInfoData.createTime}}</p>
-      <p><a-icon type="clock-circle" />&nbsp;&nbsp;修改时间：{{roleInfoData.modifyTime? roleInfoData.modifyTime : '暂未修改'}}</p>
+      <p><a-icon type="clock-circle" />&nbsp;&nbsp;修改时间：{{roleInfoData.updateTime? roleInfoData.updateTime : '暂未修改'}}</p>
       <p><a-icon type="trophy" />&nbsp;&nbsp;所拥有的权限：
         <a-tree
           :key="key"
@@ -53,9 +53,9 @@ export default {
   watch: {
     roleInfoVisiable () {
       if (this.roleInfoVisiable) {
-        this.$get('menu').then((r) => {
+        this.$get('admin/menu').then((r) => {
           this.menuTreeData = r.data.rows.children
-          this.$get('role/menu/' + this.roleInfoData.roleId).then((r) => {
+          this.$get('admin/role/menu/' + this.roleInfoData.roleId).then((r) => {
             let length = this.checkedKeys.length
             this.checkedKeys.splice(0, length, r.data)
             this.key = +new Date()

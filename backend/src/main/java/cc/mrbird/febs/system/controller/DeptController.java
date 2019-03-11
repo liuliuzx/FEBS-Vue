@@ -22,7 +22,7 @@ import java.util.Map;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("dept")
+@RequestMapping("/admin/dept")
 public class DeptController extends BaseController {
 
     private String message;
@@ -37,7 +37,7 @@ public class DeptController extends BaseController {
 
     @Log("新增部门")
     @PostMapping
-    @RequiresPermissions("dept:add")
+    @RequiresPermissions("admin:dept:add")
     public void addDept(@Valid Dept dept) throws FebsException {
         try {
             this.deptService.createDept(dept);
@@ -50,7 +50,7 @@ public class DeptController extends BaseController {
 
     @Log("删除部门")
     @DeleteMapping("/{deptIds}")
-    @RequiresPermissions("dept:delete")
+    @RequiresPermissions("admin:dept:delete")
     public void deleteDepts(@NotBlank(message = "{required}") @PathVariable String deptIds) throws FebsException {
         try {
             String[] ids = deptIds.split(",");
@@ -64,7 +64,7 @@ public class DeptController extends BaseController {
 
     @Log("修改部门")
     @PutMapping
-    @RequiresPermissions("dept:update")
+    @RequiresPermissions("admin:dept:update")
     public void updateDept(@Valid Dept dept) throws FebsException {
         try {
             this.deptService.updateDept(dept);
@@ -76,7 +76,7 @@ public class DeptController extends BaseController {
     }
 
     @PostMapping("excel")
-    @RequiresPermissions("dept:export")
+    @RequiresPermissions("admin:dept:export")
     public void export(Dept dept, QueryRequest request, HttpServletResponse response) throws FebsException {
         try {
             List<Dept> depts = this.deptService.findDepts(dept, request);

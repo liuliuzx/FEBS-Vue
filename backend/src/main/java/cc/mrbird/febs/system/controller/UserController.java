@@ -26,7 +26,7 @@ import java.util.Map;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("user")
+@RequestMapping("/admin/user")
 public class UserController extends BaseController {
 
     private String message;
@@ -47,14 +47,14 @@ public class UserController extends BaseController {
     }
 
     @GetMapping
-    @RequiresPermissions("user:view")
+    @RequiresPermissions("admin:user:view")
     public Map<String, Object> userList(QueryRequest queryRequest, User user) {
         return getDataTable(userService.findUserDetail(user, queryRequest));
     }
 
     @Log("新增用户")
     @PostMapping
-    @RequiresPermissions("user:add")
+    @RequiresPermissions("admin:user:add")
     public void addUser(@Valid User user) throws FebsException {
         try {
             this.userService.createUser(user);
@@ -67,7 +67,7 @@ public class UserController extends BaseController {
 
     @Log("修改用户")
     @PutMapping
-    @RequiresPermissions("user:update")
+    @RequiresPermissions("admin:user:update")
     public void updateUser(@Valid User user) throws FebsException {
         try {
             this.userService.updateUser(user);
@@ -80,7 +80,7 @@ public class UserController extends BaseController {
 
     @Log("删除用户")
     @DeleteMapping("/{userIds}")
-    @RequiresPermissions("user:delete")
+    @RequiresPermissions("admin:user:delete")
     public void deleteUsers(@NotBlank(message = "{required}") @PathVariable String userIds) throws FebsException {
         try {
             String[] ids = userIds.split(",");
@@ -153,7 +153,7 @@ public class UserController extends BaseController {
     }
 
     @PutMapping("password/reset")
-    @RequiresPermissions("user:reset")
+    @RequiresPermissions("admin:user:reset")
     public void resetPassword(@NotBlank(message = "{required}") String usernames) throws FebsException {
         try {
             String[] usernameArr = usernames.split(",");
@@ -166,7 +166,7 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("excel")
-    @RequiresPermissions("user:export")
+    @RequiresPermissions("admin:user:export")
     public void export(QueryRequest queryRequest, User user, HttpServletResponse response) throws FebsException {
         try {
             List<User> users = this.userService.findUserDetail(user, queryRequest).getRecords();

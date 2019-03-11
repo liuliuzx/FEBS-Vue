@@ -7,6 +7,7 @@ import cc.mrbird.febs.common.function.CacheSelector;
 import cc.mrbird.febs.common.service.CacheService;
 import cc.mrbird.febs.system.domain.User;
 import cc.mrbird.febs.system.service.UserService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -130,6 +131,18 @@ public class FebsUtil {
                 page.setDesc(request.getSortField());
         } else {
             //page.setDesc(StringUtils.isNotBlank(defaultSort)?defaultSort:"create_time");
+        }
+    }
+
+    public static void handleSort(QueryRequest request, QueryWrapper queryWrapper) {
+        if (StringUtils.isNotBlank(request.getSortField())
+                && StringUtils.isNotBlank(request.getSortOrder())
+                && !StringUtils.equalsIgnoreCase(request.getSortField(), "undefined")
+                && !StringUtils.equalsIgnoreCase(request.getSortOrder(), "undefined")) {
+            if (StringUtils.equals(request.getSortOrder(), "ascend"))
+                queryWrapper.orderByAsc(oConvertUtils.camelToUnderline(request.getSortField()));
+            else
+                queryWrapper.orderByDesc(oConvertUtils.camelToUnderline(request.getSortField()));
         }
     }
 }

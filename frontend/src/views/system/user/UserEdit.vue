@@ -149,14 +149,14 @@ export default {
           user.roleId = user.roleId.join(',')
           user.userId = this.userId
           user.deptId = this.userDept
-          this.$put('user', {
+          this.$put('admin/user', {
             ...user
           }).then((r) => {
             this.loading = false
             this.$emit('success')
             // 如果修改用户就是当前登录用户的话，更新其state
             if (user.username === this.currentUser.username) {
-              this.$get(`user/${user.username}`).then((r) => {
+              this.$get(`admin/user/${user.username}`).then((r) => {
                 this.setUser(r.data)
               })
             }
@@ -170,10 +170,10 @@ export default {
   watch: {
     userEditVisiable () {
       if (this.userEditVisiable) {
-        this.$get('role').then((r) => {
+        this.$get('admin/role').then((r) => {
           this.roleData = r.data.rows
         })
-        this.$get('dept').then((r) => {
+        this.$get('admin/dept').then((r) => {
           this.deptTreeData = r.data.rows.children
         })
       }

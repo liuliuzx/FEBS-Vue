@@ -3,7 +3,7 @@ import Febs from './FEBS'
 import router from './router'
 import Antd from 'ant-design-vue'
 import store from './store'
-import request from 'utils/request'
+import { request } from 'utils/request'
 import db from 'utils/localstorage'
 import VueApexCharts from 'vue-apexcharts'
 

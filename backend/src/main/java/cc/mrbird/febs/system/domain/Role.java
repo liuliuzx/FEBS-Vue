@@ -36,7 +36,7 @@ public class Role implements Serializable {
     private Date createTime;
 
     @ExcelField(value = "修改时间", writeConverter = TimeConverter.class)
-    private Date modifyTime;
+    private Date updateTime;
 
     private transient String createTimeFrom;
     private transient String createTimeTo;

@@ -47,12 +47,12 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add" v-hasPermission="'user:add'">新增</a-button>
-        <a-button @click="batchDelete" v-hasPermission="'user:delete'">删除</a-button>
-        <a-dropdown v-hasAnyPermission="'user:reset','user:export'">
+        <a-button type="primary" ghost @click="add" v-hasPermission="'admin:user:add'">新增</a-button>
+        <a-button @click="batchDelete" v-hasPermission="'admin:user:delete'">删除</a-button>
+        <a-dropdown v-hasAnyPermission="'admin:user:reset','admin:user:export'">
           <a-menu slot="overlay">
-            <a-menu-item v-hasPermission="'user:reset'" key="password-reset" @click="resetPassword">密码重置</a-menu-item>
-            <a-menu-item v-hasPermission="'user:export'" key="export-data" @click="exportExcel">导出Excel</a-menu-item>
+            <a-menu-item v-hasPermission="'admin:user:reset'" key="password-reset" @click="resetPassword">密码重置</a-menu-item>
+            <a-menu-item v-hasPermission="'admin:user:export'" key="export-data" @click="exportExcel">导出Excel</a-menu-item>
           </a-menu>
           <a-button>
             更多操作 <a-icon type="down" />
@@ -77,10 +77,10 @@
           </a-popover>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon v-hasPermission="'user:update'" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修改用户"></a-icon>
+          <a-icon v-hasPermission="'admin:user:update'" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修改用户"></a-icon>
           &nbsp;
-          <a-icon v-hasPermission="'user:view'" type="eye" theme="twoTone" twoToneColor="#42b983" @click="view(record)" title="查看"></a-icon>
-          <a-badge v-hasNoPermission="'user:update','user:view'" status="warning" text="无权限"></a-badge>
+          <a-icon v-hasPermission="'admin:user:view'" type="eye" theme="twoTone" twoToneColor="#42b983" @click="view(record)" title="查看"></a-icon>
+          <a-badge v-hasNoPermission="'admin:user:update','admin:user:view'" status="warning" text="无权限"></a-badge>
         </template>
       </a-table>
     </div>
@@ -290,7 +290,7 @@ export default {
           for (let key of that.selectedRowKeys) {
             userIds.push(that.dataSource[key].userId)
           }
-          that.$delete('user/' + userIds.join(',')).then(() => {
+          that.$delete('admin/user/' + userIds.join(',')).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -316,7 +316,7 @@ export default {
           for (let key of that.selectedRowKeys) {
             usernames.push(that.dataSource[key].username)
           }
-          that.$put('user/password/reset', {
+          that.$put('admin/user/password/reset', {
             usernames: usernames.join(',')
           }).then(() => {
             that.$message.success('重置用户密码成功')
@@ -336,7 +336,7 @@ export default {
         sortField = sortedInfo.field
         sortOrder = sortedInfo.order
       }
-      this.$export('user/excel', {
+      this.$export('admin/user/excel', {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams,
@@ -409,7 +409,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize
         params.pageNum = this.pagination.defaultCurrent
       }
-      this.$get('user', {
+      this.$get('admin/user', {
         ...params
       }).then((r) => {
         let data = r.data

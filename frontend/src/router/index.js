@@ -6,7 +6,7 @@ import LoginView from '@/views/login/Common'
 import EmptyPageView from '@/views/common/EmptyPageView'
 import HomePageView from '@/views/HomePage'
 import db from 'utils/localstorage'
-import request from 'utils/request'
+import { request } from 'utils/request'
 
 Vue.use(Router)
 
@@ -42,7 +42,7 @@ router.beforeEach((to, from, next) => {
   if (token.length && user) {
     if (!asyncRouter) {
       if (!userRouter) {
-        request.get(`menu/${user.username}`).then((res) => {
+        request.get(`admin/menu/${user.username}`).then((res) => {
           asyncRouter = res.data
           save('USER_ROUTER', asyncRouter)
           go(to, next)

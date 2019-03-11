@@ -132,7 +132,7 @@ export default {
           // 0 表示菜单 1 表示按钮
           button.type = '1'
           button.menuId = this.button.menuId
-          this.$put('menu', {
+          this.$put('admin/menu', {
             ...button
           }).then(() => {
             this.reset()
@@ -147,7 +147,7 @@ export default {
   watch: {
     buttonEditVisiable () {
       if (this.buttonEditVisiable) {
-        this.$get('menu', {
+        this.$get('admin/menu', {
           type: '0'
         }).then((r) => {
           this.menuTreeData = r.data.rows.children

@@ -114,7 +114,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     @Transactional
     public void updateMenu(Menu menu) throws Exception {
-        menu.setModifyTime(new Date());
+        menu.setUpdateTime(new Date());
         if (menu.getParentId() == null)
             menu.setParentId(0L);
         if (Menu.TYPE_BUTTON.equals(menu.getType())) {
@@ -155,7 +155,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             tree.setIcon(menu.getIcon());
             tree.setComponent(menu.getComponent());
             tree.setCreateTime(menu.getCreateTime());
-            tree.setModifyTime(menu.getModifyTime());
+            tree.setUpdateTime(menu.getUpdateTime());
             tree.setPath(menu.getPath());
             tree.setOrder(menu.getOrderNum());
             tree.setPermission(menu.getPerms());

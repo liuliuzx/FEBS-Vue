@@ -31,9 +31,9 @@
     </div>
     <div>
       <div class="operator">
-        <a-button v-hasPermission="'dept:add'" type="primary" ghost @click="add">新增</a-button>
-        <a-button v-hasPermission="'dept:delete'" @click="batchDelete">删除</a-button>
-        <a-dropdown v-hasPermission="'dept:export'">
+        <a-button v-hasPermission="'admin:dept:add'" type="primary" ghost @click="add">新增</a-button>
+        <a-button v-hasPermission="'admin:dept:delete'" @click="batchDelete">删除</a-button>
+        <a-dropdown v-hasPermission="'admin:dept:export'">
           <a-menu slot="overlay">
             <a-menu-item key="export-data" @click="exportExcel">导出Excel</a-menu-item>
           </a-menu>
@@ -51,8 +51,8 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
-          <a-icon v-hasPermission="'dept:update'" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修改"></a-icon>
-          <a-badge v-hasNoPermission="'dept:update'" status="warning" text="无权限"></a-badge>
+          <a-icon v-hasPermission="'admin:dept:update'" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修改"></a-icon>
+          <a-badge v-hasNoPermission="'admin:dept:update'" status="warning" text="无权限"></a-badge>
         </template>
       </a-table>
     </div>
@@ -114,9 +114,9 @@ export default {
         sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order
       }, {
         title: '修改时间',
-        dataIndex: 'modifyTime',
+        dataIndex: 'updateTime',
         sorter: true,
-        sortOrder: sortedInfo.columnKey === 'modifyTime' && sortedInfo.order
+        sortOrder: sortedInfo.columnKey === 'updateTime' && sortedInfo.order
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -173,7 +173,7 @@ export default {
         content: '当您点击确定按钮后，这些记录将会被彻底删除，如果其包含子记录，也将一并删除！',
         centered: true,
         onOk () {
-          that.$delete('dept/' + that.selectedRowKeys.join(',')).then(() => {
+          that.$delete('admin/dept/' + that.selectedRowKeys.join(',')).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.fetch()
@@ -192,7 +192,7 @@ export default {
         sortField = sortedInfo.field
         sortOrder = sortedInfo.order
       }
-      this.$export('dept/excel', {
+      this.$export('admin/dept/excel', {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams
@@ -234,7 +234,7 @@ export default {
     },
     fetch (params = {}) {
       this.loading = true
-      this.$get('dept', {
+      this.$get('admin/dept', {
         ...params
       }).then((r) => {
         let data = r.data

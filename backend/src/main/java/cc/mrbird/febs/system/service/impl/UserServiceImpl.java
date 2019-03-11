@@ -101,7 +101,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void updateUser(User user) throws Exception {
         // 更新用户
         user.setPassword(null);
-        user.setModifyTime(new Date());
+        user.setUpdateTime(new Date());
         updateById(user);
 
         userRoleMapper.delete(new QueryWrapper<UserRole>().lambda().eq(UserRole::getUserId, user.getId()));

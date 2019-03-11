@@ -104,7 +104,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         String[] roleId = {String.valueOf(role.getRoleId())};
         List<String> userIds = this.userRoleService.findUserIdsByRoleId(roleId);
 
-        role.setModifyTime(new Date());
+        role.setUpdateTime(new Date());
         baseMapper.updateById(role);
 
         roleMenuMapper.delete(new QueryWrapper<RoleMenu>().lambda().eq(RoleMenu::getRoleId, role.getRoleId()));

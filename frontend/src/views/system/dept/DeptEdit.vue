@@ -116,7 +116,7 @@ export default {
             dept.parentId = 0
           }
           dept.deptId = this.dept.deptId
-          this.$put('dept', {
+          this.$put('admin/dept', {
             ...dept
           }).then(() => {
             this.reset()
@@ -131,7 +131,7 @@ export default {
   watch: {
     deptEditVisiable () {
       if (this.deptEditVisiable) {
-        this.$get('dept').then((r) => {
+        this.$get('admin/dept').then((r) => {
           this.deptTreeData = r.data.rows.children
           this.deptTreeKey = +new Date()
         })

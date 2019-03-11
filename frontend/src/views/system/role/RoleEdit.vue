@@ -156,7 +156,7 @@ export default {
             let role = this.form.getFieldsValue()
             role.roleId = this.roleInfoData.roleId
             role.menuId = checkedArr.join(',')
-            this.$put('role', {
+            this.$put('admin/role', {
               ...role
             }).then((r) => {
               this.reset()
@@ -172,10 +172,10 @@ export default {
   watch: {
     roleEditVisiable () {
       if (this.roleEditVisiable) {
-        this.$get('menu').then((r) => {
+        this.$get('admin/menu').then((r) => {
           this.menuTreeData = r.data.rows.children
           this.allTreeKeys = r.data.ids
-          this.$get('role/menu/' + this.roleInfoData.roleId).then((r) => {
+          this.$get('admin/role/menu/' + this.roleInfoData.roleId).then((r) => {
             this.defaultCheckedKeys.splice(0, this.defaultCheckedKeys.length, r.data)
             this.checkedKeys = r.data
             this.expandedKeys = r.data

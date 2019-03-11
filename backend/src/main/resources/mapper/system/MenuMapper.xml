@@ -15,7 +15,7 @@
         <result column="TYPE" jdbcType="CHAR" property="type"/>
         <result column="ORDER_NUM" jdbcType="DOUBLE" property="orderNum"/>
         <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
     <select id="findUserPermissions" resultMap="menu">

@@ -75,7 +75,7 @@ public class User implements Serializable {
     @ExcelField(value = "创建时间", writeConverter = TimeConverter.class)
     private Date createTime;
 
-    private Date modifyTime;
+    private Date updateTime;
 
     @ExcelField(value = "最后登录时间", writeConverter = TimeConverter.class)
     private Date lastLoginTime;

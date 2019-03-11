@@ -22,7 +22,7 @@ import java.util.Map;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("log")
+@RequestMapping("/admin/log")
 public class LogController extends BaseController {
 
     private String message;

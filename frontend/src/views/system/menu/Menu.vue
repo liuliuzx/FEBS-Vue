@@ -38,10 +38,10 @@
           @cancel="() => createMenu()"
           @confirm="() => createButton()">
           <a-icon slot="icon" type="question-circle-o" style="color: orangered" />
-          <a-button type="primary" v-hasPermission="'menu:add'" ghost>新增</a-button>
+          <a-button type="primary" v-hasPermission="'admin:menu:add'" ghost>新增</a-button>
         </a-popconfirm>
-        <a-button v-hasPermission="'menu:delete'" @click="batchDelete">删除</a-button>
-        <a-dropdown v-hasPermission="'menu:export'">
+        <a-button v-hasPermission="'admin:menu:delete'" @click="batchDelete">删除</a-button>
+        <a-dropdown v-hasPermission="'admin:menu:export'">
           <a-menu slot="overlay">
             <a-menu-item key="export-data" @click="exprotExccel">导出Excel</a-menu-item>
           </a-menu>
@@ -62,8 +62,8 @@
          <a-icon :type="text" />
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon v-hasPermission="'menu:update'" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修改"></a-icon>
-          <a-badge v-hasNoPermission="'menu:update'" status="warning" text="无权限"></a-badge>
+          <a-icon v-hasPermission="'admin:menu:update'" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修改"></a-icon>
+          <a-badge v-hasNoPermission="'admin:menu:update'" status="warning" text="无权限"></a-badge>
         </template>
       </a-table>
     </div>
@@ -176,7 +176,7 @@ export default {
         dataIndex: 'createTime'
       }, {
         title: '修改时间',
-        dataIndex: 'modifyTime'
+        dataIndex: 'updateTime'
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -257,7 +257,7 @@ export default {
         content: '当您点击确定按钮后，这些记录将会被彻底删除，如果其包含子记录，也将一并删除！',
         centered: true,
         onOk () {
-          that.$delete('menu/' + that.selectedRowKeys.join(',')).then(() => {
+          that.$delete('admin/menu/' + that.selectedRowKeys.join(',')).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.fetch()
@@ -270,7 +270,7 @@ export default {
     },
     exprotExccel () {
       let {filteredInfo} = this
-      this.$export('menu/excel', {
+      this.$export('admin/menu/excel', {
         ...this.queryParams,
         ...filteredInfo
       })
@@ -305,7 +305,7 @@ export default {
     },
     fetch (params = {}) {
       this.loading = true
-      this.$get('menu', {
+      this.$get('admin/menu', {
         ...params
       }).then((r) => {
         let data = r.data
