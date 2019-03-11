@@ -1,12 +1,15 @@
 package cc.mrbird.febs.job.service.impl;
 
+import cc.mrbird.febs.common.domain.FebsConstant;
 import cc.mrbird.febs.common.domain.QueryRequest;
+import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.job.dao.JobMapper;
 import cc.mrbird.febs.job.domain.Job;
 import cc.mrbird.febs.job.service.JobService;
 import cc.mrbird.febs.job.util.ScheduleUtils;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -55,33 +58,33 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     }
 
     @Override
-    public IPage findJobs(QueryRequest request, Job job) {
+    public IPage<Job> findJobs(QueryRequest request, Job job) {
         try {
-            QueryWrapper<Job> queryWrapper = new QueryWrapper<>();
+            LambdaQueryWrapper<Job> queryWrapper = new LambdaQueryWrapper<>();
 
             if (StringUtils.isNotBlank(job.getBeanName())) {
-                queryWrapper.lambda().eq(Job::getBeanName, job.getBeanName());
+                queryWrapper.eq(Job::getBeanName, job.getBeanName());
             }
             if (StringUtils.isNotBlank(job.getMethodName())) {
-                queryWrapper.lambda().eq(Job::getMethodName, job.getMethodName());
+                queryWrapper.eq(Job::getMethodName, job.getMethodName());
             }
             if (StringUtils.isNotBlank(job.getParams())) {
-                queryWrapper.lambda().like(Job::getParams, job.getParams());
+                queryWrapper.like(Job::getParams, job.getParams());
             }
             if (StringUtils.isNotBlank(job.getRemark())) {
-                queryWrapper.lambda().like(Job::getRemark, job.getRemark());
+                queryWrapper.like(Job::getRemark, job.getRemark());
             }
             if (StringUtils.isNotBlank(job.getStatus())) {
-                queryWrapper.lambda().eq(Job::getStatus, job.getStatus());
+                queryWrapper.eq(Job::getStatus, job.getStatus());
             }
 
             if (StringUtils.isNotBlank(job.getCreateTimeFrom()) && StringUtils.isNotBlank(job.getCreateTimeTo())) {
-                queryWrapper.lambda()
+                queryWrapper
                         .ge(Job::getCreateTime, job.getCreateTimeFrom())
                         .le(Job::getCreateTime, job.getCreateTimeTo());
             }
-            queryWrapper.lambda().orderByAsc(Job::getCreateTime);
-            Page page = new Page(request.getPageNum(), request.getPageSize());
+            Page<Job> page = new Page<>(request.getPageNum(), request.getPageSize());
+            SortUtil.handlePageSort(request, page, "createTime", FebsConstant.ORDER_DESC, true);
             return this.page(page, queryWrapper);
         } catch (Exception e) {
             log.error("获取任务失败", e);
@@ -116,24 +119,23 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     @Override
     @Transactional
     public int updateBatch(String jobIds, String status) {
-        List<String> list = Arrays.asList(jobIds.split(","));
+        List<String> list = Arrays.asList(jobIds.split(StringPool.COMMA));
         Job job = new Job();
         job.setStatus(status);
-
-        return this.baseMapper.update(job, new QueryWrapper<Job>().lambda().in(Job::getJobId, list));
+        return this.baseMapper.update(job, new LambdaQueryWrapper<Job>().in(Job::getJobId, list));
     }
 
     @Override
     @Transactional
     public void run(String jobIds) {
-        String[] list = jobIds.split(",");
+        String[] list = jobIds.split(StringPool.COMMA);
         Arrays.stream(list).forEach(jobId -> ScheduleUtils.run(scheduler, this.findJob(Long.valueOf(jobId))));
     }
 
     @Override
     @Transactional
     public void pause(String jobIds) {
-        String[] list = jobIds.split(",");
+        String[] list = jobIds.split(StringPool.COMMA);
         Arrays.stream(list).forEach(jobId -> ScheduleUtils.pauseJob(scheduler, Long.valueOf(jobId)));
         this.updateBatch(jobIds, Job.ScheduleStatus.PAUSE.getValue());
     }
@@ -141,7 +143,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     @Override
     @Transactional
     public void resume(String jobIds) {
-        String[] list = jobIds.split(",");
+        String[] list = jobIds.split(StringPool.COMMA);
         Arrays.stream(list).forEach(jobId -> ScheduleUtils.resumeJob(scheduler, Long.valueOf(jobId)));
         this.updateBatch(jobIds, Job.ScheduleStatus.NORMAL.getValue());
     }

@@ -1,11 +1,11 @@
 package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.domain.QueryRequest;
-import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.dao.DictMapper;
 import cc.mrbird.febs.system.domain.Dict;
 import cc.mrbird.febs.system.service.DictService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -24,25 +24,25 @@ import java.util.List;
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements DictService {
 
     @Override
-    public IPage findDicts(QueryRequest request, Dict dict) {
+    public IPage<Dict> findDicts(QueryRequest request, Dict dict) {
         try {
-            QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
+            LambdaQueryWrapper<Dict> queryWrapper = new LambdaQueryWrapper<>();
 
             if (StringUtils.isNotBlank(dict.getKeyy())) {
-                queryWrapper.lambda().eq(Dict::getKeyy, dict.getKeyy());
+                queryWrapper.eq(Dict::getKeyy, dict.getKeyy());
             }
             if (StringUtils.isNotBlank(dict.getValuee())) {
-                queryWrapper.lambda().eq(Dict::getValuee, dict.getValuee());
+                queryWrapper.eq(Dict::getValuee, dict.getValuee());
             }
             if (StringUtils.isNotBlank(dict.getTableName())) {
-                queryWrapper.lambda().eq(Dict::getTableName, dict.getTableName());
+                queryWrapper.eq(Dict::getTableName, dict.getTableName());
             }
             if (StringUtils.isNotBlank(dict.getFieldName())) {
-                queryWrapper.lambda().eq(Dict::getFieldName, dict.getFieldName());
+                queryWrapper.eq(Dict::getFieldName, dict.getFieldName());
             }
 
-            Page page = new Page();
-            FebsUtil.handleSort(request, page, null);
+            Page<Dict> page = new Page<>();
+            SortUtil.handlePageSort(request, page, true);
             return this.page(page, queryWrapper);
         } catch (Exception e) {
             log.error("获取字典信息失败", e);

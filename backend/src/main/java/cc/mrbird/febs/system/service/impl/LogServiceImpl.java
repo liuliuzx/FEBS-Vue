@@ -1,7 +1,10 @@
 package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.annotation.Log;
+import cc.mrbird.febs.common.domain.FebsConstant;
+import cc.mrbird.febs.common.domain.QueryRequest;
 import cc.mrbird.febs.common.utils.AddressUtil;
+import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.dao.LogMapper;
 import cc.mrbird.febs.system.domain.SysLog;
 import cc.mrbird.febs.system.service.LogService;
@@ -15,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.lionsoul.ip2region.DbSearcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.stereotype.Service;
@@ -35,7 +39,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements Lo
     ObjectMapper objectMapper;
 
     @Override
-    public IPage findLogs(Page page, SysLog sysLog) {
+    public IPage<SysLog> findLogs(QueryRequest request, SysLog sysLog) {
         try {
             QueryWrapper<SysLog> queryWrapper = new QueryWrapper<>();
 
@@ -54,7 +58,8 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements Lo
                         .le(SysLog::getCreateTime, sysLog.getCreateTimeTo());
             }
 
-            queryWrapper.lambda().orderByDesc(SysLog::getCreateTime);
+            Page<SysLog> page = new Page<>(request.getPageNum(), request.getPageSize());
+            SortUtil.handlePageSort(request, page, "createTime", FebsConstant.ORDER_DESC, true);
 
             return this.page(page, queryWrapper);
         } catch (Exception e) {
@@ -97,18 +102,17 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements Lo
             log.setParams(params.toString());
         }
         log.setCreateTime(new Date());
-        log.setLocation(AddressUtil.getCityInfo(log.getIp()));
+        log.setLocation(AddressUtil.getCityInfo(DbSearcher.BTREE_ALGORITHM, log.getIp()));
         // 保存系统日志
         save(log);
     }
 
-    @SuppressWarnings("unchecked")
     private StringBuilder handleParams(StringBuilder params, Object[] args, List paramNames) throws JsonProcessingException {
         for (int i = 0; i < args.length; i++) {
             if (args[i] instanceof Map) {
                 Set set = ((Map) args[i]).keySet();
-                List list = new ArrayList();
-                List paramList = new ArrayList<>();
+                List<Object> list = new ArrayList<>();
+                List<Object> paramList = new ArrayList<>();
                 for (Object key : set) {
                     list.add(((Map) args[i]).get(key));
                     paramList.add(key);
