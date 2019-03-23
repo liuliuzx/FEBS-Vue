@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@ComponentScan(basePackages = {"cc.mrbird.febs", "com.yhp"})
+@ComponentScan(basePackages = {"cc.mrbird.febs", "com.yhp.cms", "com.yhp.buss"})
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableScheduling
