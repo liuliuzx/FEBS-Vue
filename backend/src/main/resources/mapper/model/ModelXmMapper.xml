@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.buss.model.xm.dao.ModelXmMapper">
+
+    <!--<select id="findModelXmsByUserId" resultType="modelXm">-->
+        <!--SELECT-->
+            <!--xm_id xmId,-->
+            <!--user_id userId,-->
+            <!--xm_mc xmMc,-->
+            <!--xm_zt xmZt,-->
+            <!--create_time createTime,-->
+            <!--update_time updateTime-->
+        <!--FROM-->
+            <!--model_xm-->
+        <!--WHERE-->
+            <!--user_id = #{userId};-->
+    <!--</select>-->
+</mapper>
